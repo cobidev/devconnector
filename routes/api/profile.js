@@ -147,6 +147,23 @@ router.get('/user/:user_id', async (req, res) => {
   }
 });
 
+// @route   DELETE api/profile/
+// @desc    Delete profile, user & posts
+// @access  Private
+router.delete('/', verifyAuth, async (req, res) => {
+  try {
+    // Remove profile
+    await Profile.findOneAndRemove({ user: req.userID });
+    // Remove User
+    await User.findOneAndRemove({ _id: req.userID });
+
+    res.json({ msg: 'User deleted!' });
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ msg: 'Server Error' });
+  }
+});
+
 // @route   PUT api/profile/experience
 // @desc    Add profile experience
 // @access  Private
@@ -196,17 +213,22 @@ router.put(
   }
 );
 
-// @route   DELETE api/profile/
-// @desc    Delete profile, user & posts
+// @route   DELETE api/profile/experience
+// @desc    Delete experience from profile
 // @access  Private
-router.delete('/', verifyAuth, async (req, res) => {
+router.delete('/experience/:exp_id', verifyAuth, async (req, res) => {
   try {
-    // Remove profile
-    await Profile.findOneAndRemove({ user: req.userID });
-    // Remove User
-    await User.findOneAndRemove({ _id: req.userID });
+    const profile = await Profile.findOne({ user: req.userID });
 
-    res.json({ msg: 'User deleted!' });
+    // Updated experiences by filtering ( pull out the one we want to delete )
+    profile.experience = profile.experience.filter(item => {
+      return item.id !== req.params.exp_id;
+    });
+
+    // Save the updated profile experience
+    await profile.save();
+
+    res.json(profile);
   } catch (err) {
     console.log(err.message);
     res.status(500).json({ msg: 'Server Error' });
