@@ -42,6 +42,7 @@ router.post(
       .isEmpty()
   ],
   async (req, res) => {
+    // Check for validation errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -145,6 +146,55 @@ router.get('/user/:user_id', async (req, res) => {
     res.status(500).json({ msg: 'Server Error' });
   }
 });
+
+// @route   PUT api/profile/experience
+// @desc    Add profile experience
+// @access  Private
+router.put(
+  '/experience',
+  verifyAuth,
+  [
+    check('title', 'Title is required')
+      .not()
+      .isEmpty(),
+    check('company', 'Company is required')
+      .not()
+      .isEmpty(),
+    check('from', 'From date is required')
+      .not()
+      .isEmpty()
+  ],
+  async (req, res) => {
+    // Check for validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    // Set new object experience from body to save into DB
+    const newExp = {
+      title: req.body.title,
+      company: req.body.company,
+      location: req.body.location,
+      from: req.body.from,
+      to: req.body.to,
+      current: req.body.current,
+      description: req.body.description
+    };
+
+    try {
+      const profile = await Profile.findOne({ user: req.userID });
+
+      profile.experience.unshift(newExp);
+
+      await profile.save();
+
+      res.json(profile);
+    } catch (err) {
+      console.log(err.message);
+      res.status(500).json({ msg: 'Server Error' });
+    }
+  }
+);
 
 // @route   DELETE api/profile/
 // @desc    Delete profile, user & posts
