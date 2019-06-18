@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { setAlert } from '../../actions/alert';
 
-const Register = () => {
+const Register = props => {
   // State
   const [formData, setFormData] = useState({
     name: '',
@@ -27,35 +29,10 @@ const Register = () => {
     e.preventDefault();
     // password validation
     if (password !== password2) {
-      console.log('Password do not match');
+      // dispatch action from props
+      props.setAlert('Passwords do not match', 'danger');
     } else {
       console.log(formData);
-
-      /*  AXIOS EXAMPLE BELOW
-      // create user from state
-      const newUser = {
-        name,
-        email,
-        password
-      };
-
-      try {
-        // setup content type of the request
-        const config = {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        };
-        // set newUser to JSON
-        const body = JSON.stringify(newUser);
-        // post data to API
-        const res = await axios.post('/api/users', body, config);
-
-        // get response (token) from the user
-        console.log(res.data);
-      } catch (err) {
-        console.log(err.message);
-      } */
     }
   };
 
@@ -121,4 +98,9 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default connect(
+  // mapStateToProps to props is null because we dont need state data
+  null,
+  // mapDispatchToProps is set because we need use this to dispatch action
+  { setAlert }
+)(Register);
