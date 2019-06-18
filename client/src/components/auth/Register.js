@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 
 const Register = () => {
   // State
@@ -30,6 +29,9 @@ const Register = () => {
     if (password !== password2) {
       console.log('Password do not match');
     } else {
+      console.log(formData);
+
+      /*  AXIOS EXAMPLE BELOW
       // create user from state
       const newUser = {
         name,
@@ -53,7 +55,7 @@ const Register = () => {
         console.log(res.data);
       } catch (err) {
         console.log(err.message);
-      }
+      } */
     }
   };
 
