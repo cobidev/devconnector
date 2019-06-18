@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const Register = () => {
   // State
@@ -23,13 +24,36 @@ const Register = () => {
     });
 
   // handle form submit
-  const onSubmit = e => {
+  const onSubmit = async e => {
     e.preventDefault();
     // password validation
     if (password !== password2) {
       console.log('Password do not match');
     } else {
-      console.log(formData);
+      // create user from state
+      const newUser = {
+        name,
+        email,
+        password
+      };
+
+      try {
+        // setup content type of the request
+        const config = {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        };
+        // set newUser to JSON
+        const body = JSON.stringify(newUser);
+        // post data to API
+        const res = await axios.post('/api/users', body, config);
+
+        // get response (token) from the user
+        console.log(res.data);
+      } catch (err) {
+        console.log(err.message);
+      }
     }
   };
 
