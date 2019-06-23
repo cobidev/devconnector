@@ -1,7 +1,31 @@
 import axios from 'axios';
 import { setAlert } from './alert';
 
-// Register Users Action
+// Utils
+import setAuthToken from '../utils/setAuthToken';
+
+// Load User Action
+export const loadUser = () => async dispath => {
+  // check if token exist on local Storage, if true: set that token into x-auth-token Header
+  if (localStorage.token) {
+    setAuthToken(localStorage.token);
+  }
+
+  try {
+    const res = await axios.get('/api/auth');
+
+    dispath({
+      type: 'USER_LOADED',
+      payload: res.data
+    });
+  } catch (err) {
+    dispath({
+      type: 'AUTH_ERROR'
+    });
+  }
+};
+
+// Register User Action
 export const register = ({ name, email, password }) => async dispatch => {
   const config = {
     headers: {
