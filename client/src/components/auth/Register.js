@@ -1,22 +1,23 @@
 import React, { useState } from 'react';
+// Router
+import { Link, Redirect } from 'react-router-dom';
+// Redux
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { setAlert } from '../../actions/alert';
 import { register } from '../../actions/auth';
 
 const Register = props => {
-  // State
+  /* State */
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     password2: ''
   });
-
-  // Destructure state values
+  // destructure state values
   const { name, email, password, password2 } = formData;
 
-  // Event Handlers
+  /* Event Handlers */
 
   // handle update State values when user type on input
   const onChange = e =>
@@ -30,13 +31,20 @@ const Register = props => {
     e.preventDefault();
     // password validation
     if (password !== password2) {
-      // dispatch setAlert action from props
       props.setAlert('Passwords do not match', 'danger');
     } else {
-      // dispatch register action from props
+      // dispatch register user
       props.register({ name, email, password });
+
+      if (props.isAuthenticated) {
+        return <Redirect to="/dashboard" />;
+      }
     }
   };
+
+  if (props.isAuthenticated) {
+    return <Redirect to="/dashboard" />;
+  }
 
   return (
     <div>
@@ -96,9 +104,11 @@ const Register = props => {
   );
 };
 
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
 export default connect(
-  // mapStateToProps to props is null because we dont need state data
-  null,
-  // mapDispatchToProps is set because we need use this to dispatch action
+  mapStateToProps,
   { setAlert, register }
 )(Register);

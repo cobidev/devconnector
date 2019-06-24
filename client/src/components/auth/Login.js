@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+// Router
+import { Link, Redirect } from 'react-router-dom';
+// Redux
+import { connect } from 'react-redux';
+import { login } from '../../actions/auth';
 
-const Login = () => {
-  // State
+const Login = props => {
+  /* State */
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
-
   // Destructure state values
   const { email, password } = formData;
 
-  // Event Handlers
+  /* Event Handlers */
 
   // handle update State values when user type on input
   const onChange = e =>
@@ -24,11 +27,16 @@ const Login = () => {
   const onSubmit = async e => {
     e.preventDefault();
 
-    console.log('Login Success');
+    props.login({ email, password });
   };
 
+  /* Redirect if logged in */
+  if (props.isAuthenticated) {
+    return <Redirect to="/dashboard" />;
+  }
+
   return (
-    <div>
+    <>
       <h1 className="large text-primary">Sign In</h1>
       <p className="lead">
         <i className="fas fa-user" /> Sign into Your Account
@@ -59,8 +67,15 @@ const Login = () => {
       <p className="my-1">
         Don't have an account? <Link to="/register">Sign Up</Link>
       </p>
-    </div>
+    </>
   );
 };
 
-export default Login;
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(
+  mapStateToProps,
+  { login }
+)(Login);
