@@ -11,6 +11,7 @@ export const loadUser = () => async dispath => {
   }
 
   try {
+    // get user data by sendin the x-auth-token in Header
     const res = await axios.get('/api/auth');
 
     dispath({
