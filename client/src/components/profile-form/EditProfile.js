@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createProfile } from '../../actions/profile';
 
-const CreateProfile = ({ createProfile, history }) => {
+const EditProfile = ({
+  createProfile,
+  currentProfile: { profile, loading },
+  history
+}) => {
   /* State */
   const [formData, setFormData] = useState({
     company: '',
@@ -21,6 +25,24 @@ const CreateProfile = ({ createProfile, history }) => {
   });
 
   const [displaySocialInputs, toggleSocialInputs] = useState(false);
+
+  useEffect(() => {
+    setFormData({
+      company: loading || !profile.company ? '' : profile.company,
+      website: loading || !profile.website ? '' : profile.website,
+      location: loading || !profile.location ? '' : profile.location,
+      bio: loading || !profile.bio ? '' : profile.bio,
+      status: loading || !profile.status ? '' : profile.status,
+      githubusername:
+        loading || !profile.githubusername ? '' : profile.githubusername,
+      skills: loading || !profile.skills ? '' : profile.skills.join(','),
+      youtube: loading || !profile.social ? '' : profile.social.youtube,
+      facebook: loading || !profile.social ? '' : profile.social.facebook,
+      twitter: loading || !profile.social ? '' : profile.social.twitter,
+      instagram: loading || !profile.social ? '' : profile.social.instagram,
+      linkedin: loading || !profile.social ? '' : profile.social.linkedin
+    });
+  }, [loading, profile]);
 
   const {
     company,
@@ -44,7 +66,7 @@ const CreateProfile = ({ createProfile, history }) => {
   const onSubmit = e => {
     e.preventDefault();
 
-    createProfile(formData, history);
+    createProfile(formData, history, true);
   };
 
   return (
@@ -57,7 +79,11 @@ const CreateProfile = ({ createProfile, history }) => {
       <small>* = required field</small>
       <form className='form' onSubmit={e => onSubmit(e)}>
         <div className='form-group'>
-          <select name='status' value={status} onChange={e => onChange(e)}>
+          <select
+            required
+            name='status'
+            value={status}
+            onChange={e => onChange(e)}>
             <option value='0'>* Select Professional Status</option>
             <option value='Developer'>Developer</option>
             <option value='Junior Developer'>Junior Developer</option>
@@ -112,6 +138,7 @@ const CreateProfile = ({ createProfile, history }) => {
           <input
             type='text'
             placeholder='* Skills'
+            required
             name='skills'
             value={skills}
             onChange={e => onChange(e)}
@@ -147,7 +174,7 @@ const CreateProfile = ({ createProfile, history }) => {
             type='button'
             className='btn btn-light'
             onClick={() => toggleSocialInputs(!displaySocialInputs)}>
-            Add Social Network Links
+            Edit Social Network Links
           </button>
           <span>Optional</span>
         </div>
@@ -220,7 +247,11 @@ const CreateProfile = ({ createProfile, history }) => {
   );
 };
 
+const mapStateToProps = state => ({
+  currentProfile: state.profile
+});
+
 export default connect(
-  null,
+  mapStateToProps,
   { createProfile }
-)(withRouter(CreateProfile));
+)(withRouter(EditProfile));

@@ -70,23 +70,23 @@ router.post(
     const profileFields = {};
     // 2.1) set common profile data
     profileFields.user = req.userID;
-    if (company) profileFields.company = company;
-    if (website) profileFields.website = website;
-    if (location) profileFields.location = location;
-    if (bio) profileFields.bio = bio;
+    profileFields.company = company;
+    profileFields.website = website;
+    profileFields.location = location;
+    profileFields.bio = bio;
     if (status) profileFields.status = status;
-    if (githubusername) profileFields.githubusername = githubusername;
+    profileFields.githubusername = githubusername;
     // 2.2) set skills into array
     if (skills) {
       profileFields.skills = skills.split(',').map(skill => skill.trim());
     }
     // 2.3) set social obj
     profileFields.social = {};
-    if (youtube) profileFields.social.youtube = youtube;
-    if (facebook) profileFields.social.facebook = facebook;
-    if (twitter) profileFields.social.twitter = twitter;
-    if (instagram) profileFields.social.instagram = instagram;
-    if (linkedin) profileFields.social.linkedin = linkedin;
+    profileFields.social.youtube = youtube;
+    profileFields.social.facebook = facebook;
+    profileFields.social.twitter = twitter;
+    profileFields.social.instagram = instagram;
+    profileFields.social.linkedin = linkedin;
 
     // 3) Check if Profile exist or not
     try {

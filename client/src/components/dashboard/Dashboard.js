@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getCurrentProfile } from '../../actions/profile';
+import DashboardActions from './DashboardActions';
 
 const Dashboard = ({ auth, currentProfile, getCurrentProfile }) => {
   useEffect(() => {
@@ -21,11 +22,11 @@ const Dashboard = ({ auth, currentProfile, getCurrentProfile }) => {
       </p>
 
       {currentProfile.profile !== null ? (
-        <>has</>
+        <DashboardActions />
       ) : (
         <>
           <p>You have not yet setup a profile, please add some info</p>
-          <Link to='/create/profile' className='btn btn-primary my-1'>
+          <Link to='/create-profile' className='btn btn-primary my-1'>
             Create profile
           </Link>
         </>
