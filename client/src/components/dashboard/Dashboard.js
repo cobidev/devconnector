@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getCurrentProfile } from '../../actions/profile';
 import DashboardActions from './DashboardActions';
+import Experience from './Experience';
+import Education from './Education';
 
 const Dashboard = ({ auth, currentProfile, getCurrentProfile }) => {
   useEffect(() => {
@@ -22,7 +24,11 @@ const Dashboard = ({ auth, currentProfile, getCurrentProfile }) => {
       </p>
 
       {currentProfile.profile !== null ? (
-        <DashboardActions />
+        <>
+          <DashboardActions />
+          <Experience experience={currentProfile.profile.experience} />
+          <Education education={currentProfile.profile.education} />
+        </>
       ) : (
         <>
           <p>You have not yet setup a profile, please add some info</p>
