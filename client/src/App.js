@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Landing from './components/layout/Landing';
 import Register from './components/auth/Register';
@@ -28,7 +28,7 @@ const App = () => {
 
   return (
     <Provider store={store}>
-      <Router>
+      <BrowserRouter>
         <>
           <Navbar />
           <Route exact path='/' component={Landing} />
@@ -61,7 +61,7 @@ const App = () => {
             </Switch>
           </section>
         </>
-      </Router>
+      </BrowserRouter>
     </Provider>
   );
 };
